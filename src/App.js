@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useReducer } from 'react';
 import TaskItem from './components/TaskItem';
+import logoTodo from './assets/images/logoTodo.png'
 
 /* Create reducer qui prend en paramétre de fonction
 `state` = c'est un objet qui représente les états locaux
@@ -9,7 +10,6 @@ import TaskItem from './components/TaskItem';
 const reducer = function (state, action) {
   switch (action.type) {
     case 'onChange':
-
       if (state.taskFilter && action.payload === '') {
         return { ...state, taskFilter: null, textEntered: action.payload };
       }
@@ -64,10 +64,20 @@ const reducer = function (state, action) {
       animals.splice(2, 1);
       // ["dog", "cat"]
       */
-      tasksCurrent.splice(action.payload, 1);
+
+      const newFilterTask = tasksCurrent.filter(
+        (item) => item !== action.payload
+      );
+
+      arr.splice(arr.indexOf(action.payload), 1);
       // Stock les taches dans le localstorage
-      localStorage.setItem('my-tasks', JSON.stringify(tasksCurrent));
-      return { ...state, tasks: tasksCurrent };
+      localStorage.setItem('my-tasks', JSON.stringify(arr));
+
+      return {
+        ...state,
+        tasks: arr,
+        taskFilter: state.taskFilter ? newFilterTask : null,
+      };
 
     case 'searchTask':
       const taskSearch = state.tasks.filter((item) =>
@@ -121,7 +131,7 @@ useffect sera exécute au montage du composant
         TODO APP
       </h1> */}
       {/*  <img src={logo} alt="image" className="block mx-auto" /> */}
-      <img src={'/images/logo.png'} alt="image" className="block mx-auto" />
+      <img src={logoTodo} alt="logo-todo" className="block mx-auto" />
 
       {/* Input pour taper une tache */}
       <form
@@ -168,9 +178,7 @@ useffect sera exécute au montage du composant
             <TaskItem
               key={index}
               name={item}
-              removeItem={() =>
-                dispatch({ type: 'removeTask', payload: index })
-              }
+              removeItem={() => dispatch({ type: 'removeTask', payload: item })}
             />
           ))}
         </ul>
