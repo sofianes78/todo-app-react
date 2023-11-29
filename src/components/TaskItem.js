@@ -1,7 +1,7 @@
 import { FcFullTrash } from "react-icons/fc";
 
 
-export default function TaskItem() {
+export default function TaskItem(props) {
     return (
       <li
        
